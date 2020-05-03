@@ -1,0 +1,76 @@
+Select * from wallets;
+Select * from users;
+Select * from transfers;
+Select * from agents;
+Select * from agent_transactions;
+Select count(*) from transfers where send_amount_currency = 'GHC.';
+
+1.
+Select count(*) from users; 
+2.
+Select count(*) from transfers where send_amount_currency = 'CFA' ;
+Select count(u_id ) from transfers where send_amount_currency = 'CFA' ;
+
+3.
+SELECT * FROM agent_transactions 
+WHERE NOT (when_created > '2018-12-31 23:59:59' OR when_created < '2018-01-01 00:00:00')
+
+SELECT count(*)  FROM agent_transactions 
+WHERE NOT (when_created > '2018-12-31 23:59:59' OR when_created < '2018-01-01 00:00:00')
+4.
+select extract (month from when_created), sum(amount), count(atx_id)
+from agent_transactions
+where extract(year from when_created) = 2018
+group by extract(month from when_created);
+
+5. 
+select dest_wallet_id ,send_amount_scalar,receive_amount_scalar,send_amount_scalar >receive_amount_scalar  as NetDepositer,send_amount_scalar <receive_amount_scalar  as NetWithdrawer from transfers ;
+
+
+SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
+FROM Orders
+INNER JOIN Customers ON Orders.CustomerID=Customers.CustomerID;
+6.
+SELECT agent_transactions.agent_id,agent_transactions.amount,agents.city
+FROM agent_transactions 
+INNER JOIN agents on agent_transactions.atx_id =agents.agent_id ;
+
+SELECT agents.city, SUM(agent_transactions.amount) AS transaction_volume
+FROM agent_transactions, agents
+WHERE (agent_transactions.when_created = DATE_TRUNC ('week', CURRENT_TIMESTAMP - interval '1 week'))
+AND agent_transactions.when_created < DATE_TRUNC('week', CURRENT_TIMESTAMP)
+GROUP BY city;   
+
+7.
+select sum(send_amount_scalar) as send_volume, wallets.ledger_location, transfers.kind
+from transfers, wallets
+where  (transfers.when_created = DATE_TRUNC ('week', CURRENT_TIMESTAMP - interval '1 week'))
+group by kind, ledger_location
+
+8.
+select  
+	 send_amount_scalar,sum(send_amount_scalar)
+from 
+transfers
+group by
+	send_amount_scalar ;
+	
+select sum(send_amount_scalar) as send_volume, wallets.ledger_location, transfers.kind
+from transfers, wallets
+where  (transfers.when_created = DATE_TRUNC ('week', CURRENT_TIMESTAMP - interval '1 week'))
+group by kind, ledger_location
+
+
+9.
+select sum(send_amount_scalar) as send_volume, wallets.ledger_location, transfers.kind,
+count (distinct transfers.u_id) as unique_sender,
+count (transfers.transfer_id) as transaction_count
+from transfers, wallets
+where  (transfers.when_created = DATE_TRUNC ('week', CURRENT_TIMESTAMP - interval '1 week'))
+group by kind, ledger_location, u_id,transfer_id ;
+
+
+10.
+select source_wallet_id, send_amount_scalar, send_amount_currency, when_created
+from transfers where send_amount_scalar > 10000000
+AND send_amount_currency = 'CFA' and when_created > now()-interval '1 MONTH'
