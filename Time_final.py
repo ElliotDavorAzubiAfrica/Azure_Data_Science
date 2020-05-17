@@ -19,15 +19,16 @@ except ValueError:
     print("Wrong value!!!")
 
 if End_time_totalSeconds < Start_time_totalSeconds:
-    Total_time=(Start_time_totalSeconds -End_time_totalSeconds)/3600
-    print("You have worked for :",Total_time)
+    
+    Total_time=24.00 + (End_time_totalSeconds-Start_time_totalSeconds)/3600
+    print("Total Hours of work :",Total_time,'hrs')
 else:
     Total_time= (End_time_totalSeconds-Start_time_totalSeconds)/3600
-    print("Your work duration in hours is :",Total_time)
+    print("Total Hours of work :",Total_time,'hrs')
 
 
 pay_rate = float(input("Please enter your pay rate :") )
-print("Your pay rate is  :", pay_rate )
+print("Your pay rate is:",'$',pay_rate )
 
 Total_pay=Total_time*pay_rate
-print("Your pay for the duration of work in US Dollars  is  ",Total_pay)
+print("Your Pay for the Hours of work in US Dollars is:",'$',Total_pay)
